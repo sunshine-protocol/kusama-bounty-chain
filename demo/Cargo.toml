@@ -5,7 +5,7 @@ authors = ["Amar Singh <asinghchrony@protonmail.com>"]
 edition = "2018"
 
 [dependencies]
-sunshine-cli-utils = { git = "https://github.com/sunshine-protocol/sunshine-core" }
-kb-client = { path = "../client" }
 async-std = { version = "1.6.2", features = ["attributes"] }
-rand = "0.7.3"
+env_logger = "0.7.1"
+kb-client = { path = "../client", features = ["mock"] }
+sunshine-cli-utils = { git = "https://github.com/sunshine-protocol/sunshine-core" }

@@ -15,25 +15,36 @@ Upon transaction inclusion, a bot watching the chain posts in the github issues 
 
 Submission approval and outside contributions are handled in the mobile interface, and the bot emits relevant messages in the Bounty/Submission github issues to report any changes to on-chain state.
 
-# Did this code exist before the submission period?
+### Did this code exist before the submission period?
 
-The code included in this submission was completed during the submission period. Neither the bot code nor the bounty module worked with the Rust client until this PR https://github.com/sunshine-protocol/sunshine-bounty/pull/144 was merged August 9th. Since then, a few more PRs were required to set up the testnet, achieve compatibility with the interface, and debug the github bot.
+The code was completed during the submission period. Neither the bot code nor the bounty module worked with the Rust client until this PR https://github.com/sunshine-protocol/sunshine-bounty/pull/144 was merged August 9th. Since then, a few more PRs were required to set up the testnet, achieve compatibility with the interface, and debug the github bot. The project was completed the final day of submissions.
 
 ## Demo Instructions
 
-### Local Testnet
+### Live Testnet
 
-There is a live testnet launched from [sunshine](https://github.com/sunshine-protocol/sunshine). To demo the bounty interface with the live testnet and live bot, follow the instructions on the README to build the [mobile application](https://github.com/sunshine-protocol/sunshine-bounty-ui). Shekohex posted a video demo [here](https://www.youtube.com/watch?v=bQSYjOT1R04&feature=youtu.be).
+The live testnet is deployed from [sunshine](https://github.com/sunshine-protocol/sunshine). To demo the Android bounty interface with the live testnet, download the APK [here](https://github.com/sunshine-protocol/sunshine-bounty-ui/releases). **[@shekohex](https://github.com/shekohex)** posted a [video demo](https://www.youtube.com/watch?v=bQSYjOT1R04&feature=youtu.be) 🚀
 
-### Building Code Locally
+You can
+* post a bounty
+* contribute to a bounty crowdfund
+* submit for a bounty
+* approve a bounty
 
-**Run the bot** in a terminal window.
+To post a bounty, a github issue must first be made with the bounty details in a comment (any format). The issue URL is required by the Android interface to form the bounty post command (along with the amount). Similarly, submissions for bounties require an issue URL (different from the bounty issue) that contains submission information in a comment (any format).
+
+The [testnet bot](https://github.com/sunshine-bors) watches the testnet chain and dutifully reports any changes to chain state in relevant github issues!
+
+### Test Locally
+
+**Run [the bot](https://github.com/ksm-bounty-bot)** in a terminal window.
 ```sh
+source config.sh # initialize the GITHUB_TOKEN env var for the bot
 cd bot
-cargo run 
+cargo run # Ctrl + C to kill
 ```
 
-**Run the node** in dev mode.
+Open a new window. **Run the node** in dev mode.
 ```sh
 cd node
 cargo build --release
@@ -48,9 +59,10 @@ To purge the chain from the root of this directory
 ./target/release/kb-test-node purge-chain --dev
 ```
 
-To demo, ensure the node and bot are running. Then, run the tests in demo
-```demo
-
+Open a new window. Ensure the node and bot are running in the other windows. Then run
+```sh
+cd demo
+cargo run --release
 ```
 
-
+Check the demo-hardcoded [bounty issue]() and [submission issue]() to see the results!
