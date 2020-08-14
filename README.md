@@ -37,7 +37,7 @@ The [testnet bot](https://github.com/sunshine-bors) watches the testnet chain an
 
 ### Test Locally
 
-**Run [the bot](https://github.com/ksm-bounty-bot)** in a terminal window.
+**Run [the local demo bot](https://github.com/ksm-bounty-bot)** in a terminal window.
 ```sh
 source config.sh # initialize the GITHUB_TOKEN env var for the bot
 cd bot
@@ -65,4 +65,13 @@ cd demo
 cargo run --release
 ```
 
-Check the demo-hardcoded [bounty issue]() and [submission issue]() to see the results!
+Check the demo hardcoded [bounty issue](https://github.com/sunshine-protocol/sunshine-bounty/issues/160) and [submission issue](https://github.com/sunshine-protocol/sunshine-bounty/issues/161) to see the results!
+
+### notable node commands 
+
+`Command + C` to kill the node.
+
+To purge the chain from the root of this directory
+```sh
+./target/release/kb-test-node purge-chain --dev
+```
