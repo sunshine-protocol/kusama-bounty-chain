@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = ["Amar Singh <asinghchrony@protonmail.com>"]
 edition = "2018"
 
-license = "GPL-3.0"
+license = "Unlicense"
 repository = "https://github.com/sunshine-protocol/sunshine-bounty"
 description = "minimal bounty module"
 keywords = ["sunshine", "substrate"]

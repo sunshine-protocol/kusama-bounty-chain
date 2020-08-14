@@ -19,13 +19,7 @@ use substrate_subxt::{
     },
     system::System,
 };
-use sunshine_bounty_client::{
-    bank::Bank,
-    bounty::Bounty,
-    donate::Donate,
-    org::Org,
-    vote::Vote,
-};
+use sunshine_bounty_client::bounty::Bounty;
 use sunshine_client_utils::{
     cid::CidBytes,
     client::{
@@ -46,10 +40,16 @@ use sunshine_client_utils::{
         TaskManager,
     },
 };
+use sunshine_faucet_client::Faucet;
+use sunshine_identity_client::{
+    Claim,
+    Identity,
+};
 
 pub use sunshine_bounty_client::*;
-pub use sunshine_bounty_utils as utils;
 pub use sunshine_client_utils as client;
+pub use sunshine_faucet_client as faucet;
+pub use sunshine_identity_client as identity;
 
 pub type AccountId = <<sp_runtime::MultiSignature as Verify>::Signer as IdentifyAccount>::AccountId;
 pub type Uid = u32;
@@ -66,11 +66,21 @@ impl System for Runtime {
     type Address = AccountId;
     type Header = sp_runtime::generic::Header<Self::BlockNumber, Self::Hashing>;
     type Extrinsic = sp_runtime::OpaqueExtrinsic;
-    type AccountData = AccountData<u128>;
+    type AccountData = ();
 }
 
 impl Balances for Runtime {
     type Balance = u128;
+}
+
+impl Faucet for Runtime {}
+
+impl Identity for Runtime {
+    type Uid = Uid;
+    type Cid = CidBytes;
+    type Mask = [u8; 32];
+    type Gen = u16;
+    type IdAccountData = AccountData<<Self as Balances>::Balance>;
 }
 
 impl Bounty for Runtime {
@@ -81,37 +91,27 @@ impl Bounty for Runtime {
     type BountySubmission = BountyBody;
 }
 
-impl sunshine_identity_client::Identity for Runtime {
-    type Uid = u8;
-    type Cid = CidBytes;
-    type Mask = u8;
-    type Gen = u16;
-    type IdAccountData = ();
-}
-
-impl sunshine_faucet_client::Faucet for Runtime {}
-
 impl substrate_subxt::Runtime for Runtime {
     type Signature = sp_runtime::MultiSignature;
     type Extra = extrinsic::DefaultExtra<Self>;
 }
 
 pub struct OffchainClient<S> {
+    claims: IpldCache<S, Codec, Claim>,
     bounties: IpldCache<S, Codec, BountyBody>,
-    constitutions: IpldCache<S, Codec, TextBlock>,
 }
 
 impl<S: Store> OffchainClient<S> {
     pub fn new(store: S) -> Self {
         Self {
+            claims: IpldCache::new(store.clone(), Codec::new(), 64),
             bounties: IpldCache::new(store.clone(), Codec::new(), 64),
-            constitutions: IpldCache::new(store, Codec::new(), 64),
         }
     }
 }
 
+derive_cache!(OffchainClient, claims, Codec, Claim);
 derive_cache!(OffchainClient, bounties, Codec, BountyBody);
-derive_cache!(OffchainClient, constitutions, Codec, TextBlock);
 
 impl<S: Store> From<S> for OffchainClient<S> {
     fn from(store: S) -> Self {
@@ -142,7 +142,7 @@ impl NodeConfig for Node {
     }
 
     fn chain_spec_dev() -> Self::ChainSpec {
-        kb_test_node::chain_spec::development_config()
+        kb_test_node::chain_spec::dev_chain_spec()
     }
 
     fn chain_spec_from_json_bytes(
@@ -183,7 +183,7 @@ pub mod mock {
     use super::*;
     use sunshine_client_utils::mock::{
         self,
-        build_kb_test_node,
+        build_test_node,
         OffchainStoreImpl,
     };
     pub use sunshine_client_utils::mock::{
@@ -206,7 +206,7 @@ pub mod mock {
         OffchainClient<OffchainStoreImpl>,
     >;
 
-    pub fn kb_test_node() -> (TestNode, TempDir) {
-        build_kb_test_node::<Node>()
+    pub fn test_node() -> (TestNode, TempDir) {
+        build_test_node::<Node>()
     }
 }

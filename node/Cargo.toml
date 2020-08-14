@@ -1,15 +1,18 @@
 [package]
 name = "kb-test-node"
 version = "0.1.0"
-authors = ["4meta5"]
+authors = ["Amar Singh <asinghchrony@protonmail.com>, David Craven <david@craven.ch>"]
 edition = "2018"
 publish = false
 
+[build-dependencies]
+substrate-build-script-utils = "2.0.0-rc5"
+
 [dependencies]
 futures = "0.3.5"
+hex-literal = "0.2.1"
 log = "0.4.11"
 structopt = "0.3.16"
-test-runtime = { path = "../runtime" }
 
 sc-basic-authorship = "0.8.0-rc5"
 sc-cli = "0.8.0-rc5"
@@ -28,7 +31,5 @@ sp-finality-grandpa = "2.0.0-rc5"
 sp-inherents = "2.0.0-rc5"
 sp-runtime = "2.0.0-rc5"
 sp-transaction-pool = "2.0.0-rc5"
-sunshine-client-utils = { git = "https://github.com/sunshine-protocol/sunshine-core" }
 
-[build-dependencies]
-substrate-build-script-utils = "2.0.0-rc5"
+kb-runtime = { path = "../runtime" }

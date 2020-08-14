@@ -1,7 +1,3 @@
-use rand::{
-    rngs::OsRng,
-    RngCore,
-};
 use kb_client::{
     bounty::{
         BountyClient,
@@ -15,6 +11,10 @@ use kb_client::{
     },
     utils::bounty::BountyInformation,
     BountyBody,
+};
+use rand::{
+    rngs::OsRng,
+    RngCore,
 };
 
 #[async_std::main]

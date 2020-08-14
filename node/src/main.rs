@@ -1,6 +1,9 @@
-//! Substrate Node Template CLI library.
-
+use kb_test_node::{
+    chain_spec::Chain,
+    service,
+};
 use sc_cli::{
+    Database,
     RunCmd,
     RuntimeVersion,
     Subcommand,
@@ -11,11 +14,8 @@ use sc_service::{
     Role,
     ServiceParams,
 };
+use std::str::FromStr;
 use structopt::StructOpt;
-use kb_test_node::{
-    chain_spec,
-    service,
-};
 
 #[derive(Debug, StructOpt)]
 pub struct Cli {
@@ -57,28 +57,27 @@ impl SubstrateCli for Cli {
 
     fn load_spec(
         &self,
-        id: &str,
+        chain: &str,
     ) -> Result<Box<dyn sc_service::ChainSpec>, String> {
-        Ok(match id {
-            "dev" => Box::new(chain_spec::development_config()),
-            "" | "local" => Box::new(chain_spec::local_testnet_config()),
-            path => {
-                Box::new(chain_spec::ChainSpec::from_json_file(
-                    std::path::PathBuf::from(path),
-                )?)
-            }
-        })
+        Ok(Box::new(Chain::from_str(chain)?.into_chain_spec()?))
     }
 
     fn native_runtime_version(
         _: &Box<dyn ChainSpec>,
     ) -> &'static RuntimeVersion {
-        &test_runtime::VERSION
+        &kb_runtime::VERSION
     }
 }
 
 fn main() -> sc_cli::Result<()> {
-    let cli = <Cli as SubstrateCli>::from_args();
+    let mut cli = <Cli as SubstrateCli>::from_args();
+    let db = cli
+        .run
+        .import_params
+        .database_params
+        .database
+        .unwrap_or(Database::ParityDb);
+    cli.run.import_params.database_params.database = Some(db);
 
     match &cli.subcommand {
         Some(subcommand) => {

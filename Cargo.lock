@@ -2509,6 +2509,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "kb-bot"
+version = "0.0.1"
+dependencies = [
+ "dirs",
+ "env_logger",
+ "ipld-block-builder",
+ "kb-client",
+ "log",
+ "substrate-subxt",
+ "sunshine-bounty-gbot",
+ "tokio 0.2.22",
+]
+
+[[package]]
 name = "kb-client"
 version = "0.1.0"
 dependencies = [
@@ -2525,10 +2539,47 @@ dependencies = [
 ]
 
 [[package]]
+name = "kb-runtime"
+version = "0.1.0"
+dependencies = [
+ "frame-executive",
+ "frame-support",
+ "frame-system",
+ "pallet-aura",
+ "pallet-balances",
+ "pallet-grandpa",
+ "pallet-randomness-collective-flip",
+ "pallet-timestamp",
+ "pallet-transaction-payment",
+ "parity-scale-codec",
+ "serde",
+ "sp-api",
+ "sp-block-builder",
+ "sp-consensus-aura",
+ "sp-core",
+ "sp-inherents",
+ "sp-io",
+ "sp-offchain",
+ "sp-runtime",
+ "sp-session",
+ "sp-std",
+ "sp-transaction-pool",
+ "sp-version",
+ "substrate-wasm-builder-runner",
+ "sunshine-bounty",
+ "sunshine-bounty-utils",
+ "sunshine-faucet-pallet",
+ "sunshine-identity-pallet",
+ "sunshine-pallet-utils",
+]
+
+[[package]]
 name = "kb-test-node"
 version = "0.1.0"
 dependencies = [
  "futures 0.3.5",
+ "hex-literal",
+ "kb-runtime",
  "log",
  "sc-basic-authorship",
  "sc-cli",
@@ -2549,8 +2600,6 @@ dependencies = [
  "sp-transaction-pool",
  "structopt",
  "substrate-build-script-utils",
- "sunshine-client-utils",
- "test-runtime",
 ]
 
 [[package]]
@@ -2577,20 +2626,6 @@ dependencies = [
  "kb-client",
  "rand 0.7.3",
  "sunshine-cli-utils",
-]
-
-[[package]]
-name = "kusama-github-bot"
-version = "0.0.1"
-dependencies = [
- "dirs",
- "env_logger",
- "ipld-block-builder",
- "kb-client",
- "log",
- "substrate-subxt",
- "sunshine-bounty-gbot",
- "tokio 0.2.22",
 ]
 
 [[package]]
@@ -7079,6 +7114,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "502d53007c02d7605a05df1c1a73ee436952781653da5d0bf57ad608f66932c1"
 
 [[package]]
+name = "sunshine-bounty"
+version = "0.2.1"
+source = "git+https://github.com/sunshine-protocol/sunshine-bounty#c1b6d2d9f3bbfba4e0f529b74dda6ad99032bc55"
+dependencies = [
+ "clear_on_drop",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "sp-runtime",
+ "sp-std",
+ "sunshine-bounty-utils",
+]
+
+[[package]]
 name = "sunshine-bounty-client"
 version = "0.2.0"
 source = "git+https://github.com/sunshine-protocol/sunshine-bounty#c1b6d2d9f3bbfba4e0f529b74dda6ad99032bc55"
@@ -7215,6 +7264,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "sunshine-faucet-pallet"
+version = "0.2.0"
+source = "git+https://github.com/sunshine-protocol/sunshine-identity#73795b06d34b5082ec298a5a726107d87c1dfd91"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "pallet-balances",
+ "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+]
+
+[[package]]
 name = "sunshine-identity-client"
 version = "0.2.3"
 source = "git+https://github.com/sunshine-protocol/sunshine-identity#73795b06d34b5082ec298a5a726107d87c1dfd91"
@@ -7231,6 +7294,20 @@ dependencies = [
  "sunshine-client-utils",
  "thiserror",
  "ureq",
+]
+
+[[package]]
+name = "sunshine-identity-pallet"
+version = "0.2.0"
+source = "git+https://github.com/sunshine-protocol/sunshine-identity#73795b06d34b5082ec298a5a726107d87c1dfd91"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "orml-utilities",
+ "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
 ]
 
 [[package]]
@@ -7368,39 +7445,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb6bfa289a4d7c5766392812c0a1f4c1ba45afa1ad47803c11e1f407d846d75f"
 dependencies = [
  "winapi-util",
-]
-
-[[package]]
-name = "test-runtime"
-version = "0.0.1"
-dependencies = [
- "frame-executive",
- "frame-support",
- "frame-system",
- "kusama-minimal-bounty",
- "pallet-aura",
- "pallet-balances",
- "pallet-grandpa",
- "pallet-randomness-collective-flip",
- "pallet-timestamp",
- "pallet-transaction-payment",
- "parity-scale-codec",
- "serde",
- "sp-api",
- "sp-block-builder",
- "sp-consensus-aura",
- "sp-core",
- "sp-inherents",
- "sp-io",
- "sp-offchain",
- "sp-runtime",
- "sp-session",
- "sp-std",
- "sp-transaction-pool",
- "sp-version",
- "substrate-wasm-builder-runner",
- "sunshine-bounty-utils",
- "sunshine-pallet-utils",
 ]
 
 [[package]]
@@ -7883,7 +7927,7 @@ version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3bfd5b7557925ce778ff9b9ef90e3ade34c524b5ff10e239c69a42d546d2af56"
 dependencies = [
- "rand 0.5.6",
+ "rand 0.7.3",
 ]
 
 [[package]]

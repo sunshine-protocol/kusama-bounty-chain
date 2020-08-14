@@ -1,6 +1,11 @@
 //! Service and ServiceFactory implementation. Specialized wrapper over substrate service.
 #![allow(clippy::type_complexity)]
 
+use kb_runtime::{
+    self,
+    opaque::Block,
+    RuntimeApi,
+};
 use sc_client_api::{
     ExecutorProvider,
     RemoteBackend,
@@ -9,6 +14,7 @@ use sc_executor::native_executor_instance;
 pub use sc_executor::NativeExecutor;
 use sc_finality_grandpa::{
     FinalityProofProvider as GrandpaFinalityProofProvider,
+    SharedVoterState,
     StorageAndProofProvider,
 };
 use sc_service::{
@@ -24,17 +30,12 @@ use std::{
     sync::Arc,
     time::Duration,
 };
-use test_runtime::{
-    self,
-    opaque::Block,
-    RuntimeApi,
-};
 
 // Our native executor instance.
 native_executor_instance!(
     pub Executor,
-    test_runtime::api::dispatch,
-    test_runtime::native_version,
+    kb_runtime::api::dispatch,
+    kb_runtime::native_version,
 );
 
 type FullClient = sc_service::TFullClient<Block, RuntimeApi, Executor>;
@@ -188,11 +189,6 @@ pub fn new_full(
         ..
     } = sc_service::build(params)?;
 
-    // sentry nodes announce themselves as authorities to the network
-    // and should run the same protocols authorities do, but it should
-    // never actively participate in any consensus process.
-    // let participates_in_consensus = is_authority && !config.sentry_mode;
-
     if role.is_authority() {
         let proposer = sc_basic_authorship::ProposerFactory::new(
             client.clone(),
@@ -261,7 +257,7 @@ pub fn new_full(
             voting_rule: sc_finality_grandpa::VotingRulesBuilder::default()
                 .build(),
             prometheus_registry,
-            shared_voter_state: sc_finality_grandpa::SharedVoterState::empty(),
+            shared_voter_state: SharedVoterState::empty(),
         };
 
         // the GRANDPA voter task is considered infallible, i.e.
