@@ -99,11 +99,16 @@ pub fn dev_chain_spec() -> ChainSpec {
         || {
             testnet_genesis(
                 // initial authorities
-                &[seed_to_authority_keys("//Alice")],
+                &[
+                    seed_to_authority_keys("//Alice"),
+                    seed_to_authority_keys("//Bob"),
+                ],
                 // endowed accounts
                 &[
                     seed_to_account_id::<sr25519::Public>("//Alice"),
                     seed_to_account_id::<sr25519::Public>("//Alice/stash"),
+                    seed_to_account_id::<sr25519::Public>("//Bob"),
+                    seed_to_account_id::<sr25519::Public>("//Bob/stash"),
                 ],
             )
         },
@@ -259,7 +264,7 @@ fn testnet_genesis(
             balances: endowed_accounts
                 .iter()
                 .cloned()
-                .map(|k| (k, 1 << 60))
+                .map(|k| (k, 1 << 127))
                 .collect(),
         }),
         pallet_aura: Some(AuraConfig {
