@@ -44,7 +44,7 @@ cd ..
 ./target/release/kb-test-node --dev
 ```
 
-Open a new window. **Run [the local demo bot](https://github.com/ksm-bounty-bot)** in a terminal window.
+Open a new window. **Run the local [demo bot](https://github.com/ksm-bounty-bot)**.
 ```sh
 source config.sh # initialize the GITHUB_TOKEN env var for the bot
 cd bot
