@@ -28,7 +28,7 @@ use tokio::task;
 async fn main() -> Result<()> {
     env_logger::init();
     let github = GBot::new()?;
-    let root = dirs::config_dir().unwrap().join("sunshine-bounty-bot");
+    let root = dirs::config_dir().unwrap().join("ksm-bounty-bot");
     let client = Arc::new(Client::new(&root, "ws://127.0.0.1:9944").await?);
 
     let post = Subscription::<_, BountyPostedEvent<Runtime>>::subscribe(
