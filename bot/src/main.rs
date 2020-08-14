@@ -1,3 +1,5 @@
+#![allow(clippy::while_let_loop)]
+
 use ipld_block_builder::ReadonlyCache;
 use kb_client::{
     bounty::{
