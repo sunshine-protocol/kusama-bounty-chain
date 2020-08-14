@@ -1,7 +1,6 @@
 # Kusama Bounty Chain + Bot
-> *description word count*: 119
 
-This substrate chain implementation supports posting and crowdfunding bounties. 
+This substrate chain implementation supports posting and crowdfunding bounties. *It uses [sunshine-keybase](https://github.com/sunshine-protocol/sunshine-keybase) for identity and device authentication.*
 
 `Post` bounty user flow:
 1. Open an issue on github with the bounty's requirements
