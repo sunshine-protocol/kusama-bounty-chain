@@ -36,7 +36,7 @@ The [testnet bot](https://github.com/sunshine-bors) watches the testnet chain an
 
 ### Test Locally
 
-**Run the node** in dev mode.
+1. **Run the node** in dev mode.
 ```sh
 cd node
 cargo build --release
@@ -44,12 +44,22 @@ cd ..
 ./target/release/kb-test-node --dev
 ```
 
-Open a new window. **Run the local [demo bot](https://github.com/ksm-bounty-bot)**.
+2. **Run the local [demo bot](https://github.com/ksm-bounty-bot)**. 
+
+Open a new window. First, create a new file in the root called `config.sh`. In this file, type
+```sh
+export GITHUB_TOKEN="beada77f56a300cc5efb5f776f96cbf90bd5102e"
+```
+Initialize the token as an environment variable for the bot
 ```sh
 source config.sh # initialize the GITHUB_TOKEN env var for the bot
 cd bot
 cargo run # Ctrl + C to kill
 ```
+
+> Before there was a file `config.sh` placed in the root of this repo, but Github automatically revoked the publicly exposed token. Now, the token is just hidden from the github parser in the code comment.
+
+3. **Run the demo**.
 
 Open a new window. Ensure the node and bot are running in the other windows. Then run
 ```sh
