@@ -46,9 +46,9 @@ cd ..
 
 2. **Run the local [demo bot](https://github.com/ksm-bounty-bot)**. 
 
-Open a new window. First, create a new file in the root called `config.sh`. In this file, type
+Open a new window. First, create a new file in the root called `config.sh`. In this file, paste the text from [this pastebin](https://pastebin.com/hLuEK5Ty) which follows the format:
 ```sh
-export GITHUB_TOKEN="beada77f56a300cc5efb5f776f96cbf90bd5102e"
+export GITHUB_TOKEN="$SOME_NUMBER"
 ```
 Initialize the token as an environment variable for the bot
 ```sh
@@ -57,7 +57,7 @@ cd bot
 cargo run # Ctrl + C to kill
 ```
 
-> Before there was a file `config.sh` placed in the root of this repo, but Github automatically revoked the publicly exposed token. Now, the token is just hidden from the github parser in the code comment.
+> Before there was a file `config.sh` placed in the root of this repo, but Github automatically revokes any publicly exposed token.
 
 3. **Run the demo**.
 
