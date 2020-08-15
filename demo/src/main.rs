@@ -1,38 +1,61 @@
 use kb_client::{
     bounty::BountyClient,
-    mock::{
-        test_node,
-        AccountKeyring,
-        Client,
+    client::{
+        Client as _,
+        Result,
     },
+    mock::AccountKeyring,
     BountyBody,
+    Client,
 };
-use sunshine_cli_utils::Result;
+use sunshine_crypto::{
+    keychain::TypedPair,
+    secrecy::SecretString,
+};
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    env_logger::try_init().ok();
-    let (node, _node_tmp) = test_node();
-    let alice_client = Client::mock(&node, AccountKeyring::Alice).await;
-    let bob_client = Client::mock(&node, AccountKeyring::Bob).await;
+    env_logger::init();
+    let alice_root = dirs::config_dir().unwrap().join("demo-alice");
+    let mut alice_client =
+        Client::new(&alice_root, "ws://127.0.0.1:9944").await?;
+    alice_client
+        .set_key(
+            TypedPair::from_suri(&AccountKeyring::Alice.to_seed()).unwrap(),
+            &SecretString::new("password".to_string()),
+            true,
+        )
+        .await?;
+    alice_client
+        .unlock(&SecretString::new("password".to_string()))
+        .await?;
+    let bob_root = dirs::config_dir().unwrap().join("demo-bob");
+    let mut bob_client = Client::new(&bob_root, "ws://127.0.0.1:9944").await?;
+    bob_client
+        .set_key(
+            TypedPair::from_suri(&AccountKeyring::Bob.to_seed()).unwrap(),
+            &SecretString::new("password".to_string()),
+            true,
+        )
+        .await?;
+    bob_client
+        .unlock(&SecretString::new("password".to_string()))
+        .await?;
     let bounty = BountyBody {
         repo_owner: "sunshine-protocol".to_string(),
         repo_name: "sunshine-bounty".to_string(),
         issue_number: 160,
     };
     // (1) Alice posts a bounty!
-    let _ = alice_client.post_bounty(bounty, 2000).await.unwrap();
+    let _ = alice_client.post_bounty(bounty, 2000).await?;
     let submission = BountyBody {
         repo_owner: "sunshine-protocol".to_string(),
         repo_name: "sunshine-bounty".to_string(),
         issue_number: 161,
     };
     // (2) Bob submits for Alice's bounty!
-    let _ = bob_client
-        .submit_for_bounty(1, submission, 1000)
-        .await
-        .unwrap();
+    let _ = bob_client.submit_for_bounty(1, submission, 1000).await?;
     // (3) Alice approves Bob's submission
-    let _ = alice_client.approve_bounty_submission(1).await.unwrap();
+    let _ = alice_client.approve_bounty_submission(1).await?;
     Ok(())
 }

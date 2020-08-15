@@ -9,3 +9,5 @@ async-std = { version = "1.6.2", features = ["attributes"] }
 env_logger = "0.7.1"
 kb-client = { path = "../client", features = ["mock"] }
 sunshine-cli-utils = { git = "https://github.com/sunshine-protocol/sunshine-core" }
+sunshine-crypto = { git = "https://github.com/sunshine-protocol/sunshine-core" }
+dirs = "3.0.1"

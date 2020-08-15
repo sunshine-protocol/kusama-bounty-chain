@@ -2550,9 +2550,11 @@ name = "kusama-bounty-demo"
 version = "0.0.1"
 dependencies = [
  "async-std",
+ "dirs",
  "env_logger",
  "kb-client",
  "sunshine-cli-utils",
+ "sunshine-crypto",
 ]
 
 [[package]]
