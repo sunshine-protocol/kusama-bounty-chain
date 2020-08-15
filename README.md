@@ -61,7 +61,7 @@ Check the demo hardcoded [bounty issue](https://github.com/sunshine-protocol/sun
 
 ### notable node commands 
 
-`Command + C` to kill the node.
+`Ctrl + C` to kill the node.
 
 To purge the chain from the root of this directory
 ```sh
