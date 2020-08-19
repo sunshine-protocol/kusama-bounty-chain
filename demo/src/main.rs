@@ -5,8 +5,8 @@ use kb_client::{
         Result,
     },
     mock::AccountKeyring,
-    BountyBody,
     Client,
+    GithubIssue,
 };
 use sunshine_crypto::{
     keychain::TypedPair,
@@ -41,14 +41,14 @@ async fn main() -> Result<()> {
     bob_client
         .unlock(&SecretString::new("password".to_string()))
         .await?;
-    let bounty = BountyBody {
+    let bounty = GithubIssue {
         repo_owner: "sunshine-protocol".to_string(),
         repo_name: "sunshine-bounty".to_string(),
         issue_number: 160,
     };
     // (1) Alice posts a bounty!
     let _ = alice_client.post_bounty(bounty, 2000).await?;
-    let submission = BountyBody {
+    let submission = GithubIssue {
         repo_owner: "sunshine-protocol".to_string(),
         repo_name: "sunshine-bounty".to_string(),
         issue_number: 161,

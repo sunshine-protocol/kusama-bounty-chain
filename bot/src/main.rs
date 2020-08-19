@@ -1,5 +1,3 @@
-#![allow(clippy::while_let_loop)]
-
 use ipld_block_builder::ReadonlyCache;
 use kb_client::{
     bounty::{
@@ -14,8 +12,8 @@ use kb_client::{
         Client as _,
         Result,
     },
-    BountyBody,
     Client,
+    GithubIssue,
     Runtime,
 };
 use std::{
@@ -30,7 +28,7 @@ use tokio::task;
 async fn main() -> Result<()> {
     env_logger::init();
     let github = GBot::new()?;
-    let root = dirs::config_dir().unwrap().join("ksm-bounty-bot");
+    let root = dirs::config_dir().unwrap().join("sunshine-bounty-bot");
     let client = Arc::new(Client::new(&root, "ws://127.0.0.1:9944").await?);
 
     let post = Subscription::<_, BountyPostedEvent<Runtime>>::subscribe(
@@ -110,16 +108,11 @@ async fn process_subscription<E: subxt::Event<Runtime> + Into<Event>>(
     github: GBot,
     mut subscription: Subscription<Runtime, E>,
 ) {
-    loop {
-        if let Some(res) = subscription.next().await {
-            if let Err(err) =
-                process_event(&client, &github, res.map(Into::into)).await
-            {
-                log::error!("{:?}", err);
-            }
-        } else {
-            // this should never happen
-            break
+    while let Some(res) = subscription.next().await {
+        if let Err(err) =
+            process_event(&client, &github, res.map(Into::into)).await
+        {
+            log::error!("{:?}", err);
         }
     }
 }
@@ -164,11 +157,11 @@ async fn process_event(
         Event::BountyPosted(event) => {
             // fetch structured data from client
             let event_cid = event.description.to_cid()?;
-            let bounty_body: BountyBody =
+            let bounty_body: GithubIssue =
                 client.offchain_client().get(&event_cid).await?;
-            // issue comment
+            // new issue comment
             github
-                .issue_comment_bounty_post(
+                .new_bounty_issue(
                     event.amount,
                     event.id,
                     bounty_body.repo_owner,
@@ -180,12 +173,11 @@ async fn process_event(
         Event::RaiseContribution(event) => {
             // fetch structured data from client
             let event_cid = event.bounty_ref.to_cid()?;
-            let bounty_body: BountyBody =
+            let bounty_body: GithubIssue =
                 client.offchain_client().get(&event_cid).await?;
-            // issue comment
+            // update existing bounty comment
             github
-                .issue_comment_bounty_contribute(
-                    event.amount,
+                .update_bounty_issue(
                     event.total,
                     event.bounty_id,
                     bounty_body.repo_owner,
@@ -198,22 +190,22 @@ async fn process_event(
             // fetch structured data from client
             let bounty_event_cid = event.bounty_ref.to_cid()?;
             let submission_event_cid = event.submission_ref.to_cid()?;
-            let bounty_body: BountyBody =
+            let bounty_body: GithubIssue =
                 client.offchain_client().get(&bounty_event_cid).await?;
-            let submission_body: BountyBody =
+            let submission_body: GithubIssue =
                 client.offchain_client().get(&submission_event_cid).await?;
-            // issue comment
+            // new issue comment
             github
-                .issue_comment_bounty_submission(
+                .new_submission_issue(
                     event.amount,
                     event.bounty_id,
                     event.id,
-                    submission_body.repo_owner,
-                    submission_body.repo_name,
-                    submission_body.issue_number,
                     bounty_body.repo_owner,
                     bounty_body.repo_name,
                     bounty_body.issue_number,
+                    submission_body.repo_owner,
+                    submission_body.repo_name,
+                    submission_body.issue_number,
                 )
                 .await?;
         }
@@ -221,20 +213,29 @@ async fn process_event(
             // fetch structured data from client
             let bounty_event_cid = event.bounty_ref.to_cid()?;
             let submission_event_cid = event.submission_ref.to_cid()?;
-            let bounty_body: BountyBody =
+            let bounty_body: GithubIssue =
                 client.offchain_client().get(&bounty_event_cid).await?;
-            let submission_body: BountyBody =
+            let submission_body: GithubIssue =
                 client.offchain_client().get(&submission_event_cid).await?;
-            // issue comment
+            // update existing submission comment
             github
-                .issue_comment_submission_approval(
+                .approve_submission_issue(
                     event.amount,
-                    event.new_total,
-                    event.submission_id,
                     event.bounty_id,
+                    event.submission_id,
+                    bounty_body.repo_owner.clone(),
+                    bounty_body.repo_name.clone(),
+                    bounty_body.issue_number,
                     submission_body.repo_owner,
                     submission_body.repo_name,
                     submission_body.issue_number,
+                )
+                .await?;
+            // update existing bounty comment
+            github
+                .update_bounty_issue(
+                    event.new_total,
+                    event.bounty_id,
                     bounty_body.repo_owner,
                     bounty_body.repo_name,
                     bounty_body.issue_number,
