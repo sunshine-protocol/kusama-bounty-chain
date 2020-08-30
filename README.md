@@ -1,5 +1,7 @@
 # Kusama Bounty Chain + Bot
 
+**NOTE**: This repo placed 3rd in Hackusama](https://hackusama.devpost.com/submissions), but it is not actively maintained. To follow our progress, see the pinned repos [here](https://github.com/sunshine-protocol)
+
 This substrate chain implementation supports posting and crowdfunding bounties. *It uses [sunshine-keybase](https://github.com/sunshine-protocol/sunshine-keybase) for identity and device authentication.*
 
 `Post` bounty user flow:
